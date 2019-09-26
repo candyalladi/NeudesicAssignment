@@ -33,13 +33,11 @@ namespace AssignmentApp.Views
         private void OpenExistingFileButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Xml files (*.xml)|*.xml|JSON files (*.json)|*.json";
+            openFileDialog.Filter = "JSON files (*.json)|*.json";
             if (openFileDialog.ShowDialog() == true)
             {
-                //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
                 //Process selected XML file or Json file
                 viewModel.OpenExistingFile(openFileDialog.FileName);
-                txtEditor.AppendText(viewModel.FileContent);
             }
         }
     }

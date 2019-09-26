@@ -58,8 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FileOperations\IReadWriteJsonFile.cs" />
     <Compile Include="ViewModels\AssignmentAppViewModel.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AssignmentAppView.xaml.cs">
       <DependentUpon>AssignmentAppView.xaml</DependentUpon>
     </Compile>

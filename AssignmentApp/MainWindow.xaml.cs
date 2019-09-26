@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AssignmentApp.FileOperations;
+using AssignmentApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,11 +22,13 @@ namespace AssignmentApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ViewModels.AssignmentAppViewModel viewModel;
+        private readonly ViewModels.AssignmentAppViewModel viewModel;
+        private readonly IReadWriteJsonFile<Record> readWriteJsonFile;
         public MainWindow()
         {
             InitializeComponent();
-            viewModel = new ViewModels.AssignmentAppViewModel();
+            readWriteJsonFile = new ReadWriteJsonFile<Record>();
+            viewModel = new ViewModels.AssignmentAppViewModel(readWriteJsonFile);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
