@@ -39,6 +39,7 @@ namespace AssignmentApp.Views
                 //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
                 //Process selected XML file or Json file
                 viewModel.OpenExistingFile(openFileDialog.FileName);
+                txtEditor.AppendText(viewModel.FileContent);
             }
         }
     }

@@ -17,29 +17,31 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Column="0" Grid.Row="0" Height="25">
+        <Button x:Name="CreateNewFileButton" Grid.Column="0" Grid.Row="0" Height="32"
+                Command="{Binding CreateNewFileCommand}">
             Create New File
         </Button>
-        <Button x:Name ="OpenExistingFileButton" Grid.Column="0" Grid.Row="1" Height="25" 
+        <Button x:Name ="OpenExistingFileButton" Grid.Column="0" Grid.Row="1" Height="32" 
                 Click="OpenExistingFileButton_Click">
             Open Existing
         </Button>
-        <ListView Grid.Row="2" ItemsSource="{Binding Records}"></ListView>
-        <Button Grid.Column="0" Grid.Row="3" Height="25">
+        <ListView Grid.Row="2" ItemsSource="{Binding Records}"
+                  DisplayMemberPath="RecordName"></ListView>
+        <Button Grid.Column="0" Grid.Row="3" Height="32">
             New Record
         </Button>
-        <Button Grid.Column="0" Grid.Row="4" Height="25"
+        <Button Grid.Column="0" Grid.Row="4" Height="32"
                 Command="{Binding SaveCommand}">
             Save
         </Button>
         <Label Grid.Column="1" Grid.Row="0">
             Editor - Create a New or Edit an existing Record
         </Label>
-        <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="3">
-            <DatePickerTextBox/>            
-            <TextBox/>
+        <StackPanel Grid.Column="1" Grid.Row="3">
+            <DatePicker/>            
+            <TextBox x:Name="txtVersion"/>
             <Label>New Features:</Label>
-            <TextBlock x:Name="txtEditor"/>
+            <RichTextBox x:Name="txtEditor"/>
         </StackPanel>        
     </Grid>
 </UserControl>

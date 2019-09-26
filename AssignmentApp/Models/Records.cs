@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentApp.Models
 {
-    public class Records
+    public class Record
     {
         public string RecordName { get; set; }
         public DateTime DateTime { get; set; }
