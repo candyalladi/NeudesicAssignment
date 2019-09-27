@@ -68,7 +68,7 @@ namespace AssignmentApp.ViewModels
             var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
             readWriteJsonFile.WriteJson(fileName, records);
             //DisplayMessage($"Successfuly create file at location : {fileName}");  
-            MessageBox_Show(null,$"Successfuly create file at location : {fileName}");
+            MessageBox_Show(null,$"Successfuly create file at location : {fileName}", "Create File", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
         }
 
         private bool CanEditRecord(object paramter)
@@ -90,7 +90,7 @@ namespace AssignmentApp.ViewModels
             var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
             readWriteJsonFile.WriteJson(fileName, records);
             //DisplayMessage($"File is successfully saved at : {fileName}");
-            MessageBox_Show(null, $"File is successfully saved at location : {fileName}");
+            MessageBox_Show(null, $"File is successfully saved at location : {fileName}", "File Save", System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
         }
 
         public DelegateCommand SaveCommand { get; }
