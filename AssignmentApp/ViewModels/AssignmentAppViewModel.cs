@@ -65,9 +65,10 @@ namespace AssignmentApp.ViewModels
             };
             records.Add(record);
             records.Add(record2);
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//AssignmentApp.json";
+            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
             readWriteJsonFile.WriteJson(fileName, records);
-            //DisplayMessage($"Successfuly create file at location : {fileName}");
+            //DisplayMessage($"Successfuly create file at location : {fileName}");  
+            MessageBox_Show(null,$"Successfuly create file at location : {fileName}");
         }
 
         private bool CanEditRecord(object paramter)
@@ -86,9 +87,10 @@ namespace AssignmentApp.ViewModels
 
         private void SaveRecord(object obj)
         {
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//AssignmentApp.json";
+            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
             readWriteJsonFile.WriteJson(fileName, records);
             //DisplayMessage($"File is successfully saved at : {fileName}");
+            MessageBox_Show(null, $"File is successfully saved at location : {fileName}");
         }
 
         public DelegateCommand SaveCommand { get; }
@@ -143,9 +145,9 @@ namespace AssignmentApp.ViewModels
                         selectedRecord.Features = new ObservableCollection<string>();
                     }
                     selectedRecord.Features.Add(newFeature);
+                    this.newFeature = string.Empty;
                     OnPropertyChanged("Features");
                     OnPropertyChanged("Records");
-
                 }
             }
         }

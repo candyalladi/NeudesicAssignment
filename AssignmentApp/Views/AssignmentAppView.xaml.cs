@@ -29,7 +29,14 @@ namespace AssignmentApp.Views
             InitializeComponent();
             this.viewModel = viewModel;
             this.DataContext = viewModel;
+            (this.DataContext as AssignmentAppViewModel).MessageBoxRequest += new EventHandler<MvvmMessageBoxEventArgs>(AssignmentAppView_MyMessageBoxRequest);
         }
+
+        private void AssignmentAppView_MyMessageBoxRequest(object sender, MvvmMessageBoxEventArgs e)
+        {
+            e.Show();
+        }
+
         private void OpenExistingFileButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
