@@ -11,9 +11,10 @@ namespace AssignmentApp.Models
     public class Record
     {
         private string recordName;
+        private DateTime dateTime = DateTime.Today;
 
         public string RecordName { get => recordName; set => recordName = value; }
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get => dateTime; set => dateTime = value; }
         public string Version { get; set; }
         public ObservableCollection<string> Features { get; set; }
     }
