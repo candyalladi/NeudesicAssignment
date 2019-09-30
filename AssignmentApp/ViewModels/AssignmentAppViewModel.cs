@@ -16,25 +16,47 @@ namespace AssignmentApp.ViewModels
 {
     public class AssignmentAppViewModel : ViewModelBase
     {
-        private ObservableCollection<Record> records;
         private Record selectedRecord;
+        private Record editedRecord;
         private string newFeature;
         private IReadWriteJsonFile<Record> readWriteJsonFile;
-        private bool isEditable = true;
+        private bool isEditable = false;
+        private bool canUserAddRecord = false;
+        private ObservableCollection<Record> records;
+        private ObservableCollection<Record> editedRecords;
 
         public AssignmentAppViewModel(IReadWriteJsonFile<Record> readWriteJsonFile)
         {
             SaveCommand = new DelegateCommand(SaveRecord);
-            EditRowCommand = new DelegateCommand(EditRecord, CanEditRecord);
             CreateNewFileCommand = new DelegateCommand(CreateNewFile);
+            NewRecordCommand = new DelegateCommand(AddNewRecord,CanAddNewRecord);
+            EditRecordCommand = new DelegateCommand(EditRecord, CanEditRecord);
             records = new ObservableCollection<Record>();
+            editedRecords = new ObservableCollection<Record>();
             this.readWriteJsonFile = readWriteJsonFile;
+        }
+
+        private bool CanEditRecord(object obj)
+        {
+            return SelectedItem !=null;
+        }
+
+        private bool CanAddNewRecord(object obj)
+        {
+            return true;
+        }
+
+        private void AddNewRecord(object obj)
+        {
+            CanUserAddRecord = true;
+            SelectedEditedRecords.Clear();
+            MessageBox_Show(null,$"Successfully added a new record");
         }
 
         public void OpenExistingFile(string fileName)
         {
-            records = readWriteJsonFile.ReadJsonFile(fileName);
-            OnPropertyChanged("Records");
+            Records = readWriteJsonFile.ReadJsonFile(fileName);
+            editedRecords.Clear();
         }
 
         public void CreateNewFile(object parameter)
@@ -43,6 +65,7 @@ namespace AssignmentApp.ViewModels
             List<Record> records = new List<Record>();
             Record record = new Record()
             {
+                Id = 1,
                 RecordName = "Record 1",
                 DateTime = DateTime.Today,
                 Version = "1.0.0.X",
@@ -54,6 +77,7 @@ namespace AssignmentApp.ViewModels
             };
             Record record2 = new Record()
             {
+                Id=2,
                 RecordName = "Record 2",
                 DateTime = DateTime.Today,
                 Version = "1.0.0.X",
@@ -67,35 +91,28 @@ namespace AssignmentApp.ViewModels
             records.Add(record2);
             var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
             readWriteJsonFile.WriteJson(fileName, records);
-            //DisplayMessage($"Successfuly create file at location : {fileName}");  
             MessageBox_Show(null,$"Successfuly create file at location : {fileName}", "Create File", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
-        }
-
-        private bool CanEditRecord(object paramter)
-        {
-            ////ToDo: Check, if the records are selected for editing. As of now returning true by default
-            //isEditable = Boolean.TryParse(paramter.ToString(),out isEditable);
-            //OnPropertyChanged("IsEditable");
-            return isEditable;
         }
 
         private void EditRecord(object isEditRow)
         {
-            isEditable = !Boolean.TryParse(isEditRow.ToString(),out isEditable);
-            OnPropertyChanged("IsEditable");
+            SelectedEditedRecords.Add(selectedRecord);
         }
 
         private void SaveRecord(object obj)
         {
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
+            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";           
             readWriteJsonFile.WriteJson(fileName, records);
-            //DisplayMessage($"File is successfully saved at : {fileName}");
+            SelectedEditedRecords.Clear();
             MessageBox_Show(null, $"File is successfully saved at location : {fileName}", "File Save", System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
         }
 
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand EditRowCommand { get; }
         public DelegateCommand CreateNewFileCommand { get; }
+
+        public DelegateCommand NewRecordCommand { get; }
+        public DelegateCommand EditRecordCommand { get; private set; }
 
         public ObservableCollection<Record> Records
         {
@@ -124,11 +141,49 @@ namespace AssignmentApp.ViewModels
                 if(selectedRecord != value)
                 {
                     selectedRecord = value;
+                    EditRecordCommand.RaiseCanExecuteChanged();
                     OnPropertyChanged("SelectedItem");
                 }
             }
         }
 
+        public Record EditedRecord
+        {
+            get
+            {
+                return editedRecord;
+            }
+            set
+            {
+                if (editedRecord != value)
+                {
+                    editedRecord = value;
+                    OnPropertyChanged("EditedRecord");
+                }
+            }
+        }
+
+        public ObservableCollection<Record> SelectedEditedRecords
+        {
+            get
+            {
+                return editedRecords;
+            }
+            set
+            {
+                if (editedRecords != value)
+                {
+                    editedRecords = value;
+                    foreach (var item in editedRecords)
+                    {
+                        records.Add(item);
+                    }
+                    editedRecords.Clear();
+                    OnPropertyChanged("Records");
+                    OnPropertyChanged("SelectedEditedRecords");
+                }
+            }
+        }
         public string NewFeature
         {
             get
@@ -168,15 +223,19 @@ namespace AssignmentApp.ViewModels
             }
         }
 
-        private void DisplayMessage(string message)
+        public bool CanUserAddRecord
         {
-            var viewModel = new DialogViewModel(message);
-            var view = new DialogWindow { DataContext = viewModel };
-
-            bool? result = view.ShowDialog();
-            if(result.HasValue)
+            get
             {
-                view.Close();
+                return canUserAddRecord;
+            }
+            set
+            {
+                if(canUserAddRecord != value)
+                {
+                    canUserAddRecord = value;
+                    OnPropertyChanged("CanUserAddRecord");
+                }
             }
         }
     }
