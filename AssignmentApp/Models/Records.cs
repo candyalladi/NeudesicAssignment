@@ -16,17 +16,16 @@ namespace AssignmentApp.Models
         private string recordName;
         private DateTime dateTime = DateTime.Today;
         private ObservableCollection<string> features;
-        //private int nextId; 
+        private static int id = 1;
+        static int generateId()
+        {
+            return id++;
+        }
 
-        //public Record()
-        //{
-        //    Id = Interlocked.Increment(ref nextId);
-        //}
-
-        [Key]
+      
         public int Id
         {
-            get;set;           
+            get { return generateId(); }           
         }
         public string RecordName
         {

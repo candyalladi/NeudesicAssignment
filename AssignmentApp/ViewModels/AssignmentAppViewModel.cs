@@ -33,7 +33,7 @@ namespace AssignmentApp.ViewModels
         {
             SaveCommand = new DelegateCommand(SaveRecord);
             CreateNewFileCommand = new DelegateCommand(CreateNewFile);
-            NewRecordCommand = new DelegateCommand(AddNewRecord,CanAddNewRecord);
+            NewRecordCommand = new DelegateCommand(AddNewRecord, CanAddNewRecord);
             EditRecordCommand = new DelegateCommand(EditRecord, CanEditRecord);
             records = new ObservableCollection<Record>();
             editedRecords = new ObservableCollection<Record>();
@@ -52,7 +52,7 @@ namespace AssignmentApp.ViewModels
         #region Methods
         private bool CanEditRecord(object obj)
         {
-            return SelectedItem !=null;
+            return SelectedItem != null;
         }
 
         private bool CanAddNewRecord(object obj)
@@ -64,7 +64,6 @@ namespace AssignmentApp.ViewModels
         {
             CanUserAddRecord = true;
             SelectedEditedRecords.Clear();
-            MessageBox_Show(null,$"Successfully added a new record");
         }
 
         public void OpenExistingFile(string fileName)
@@ -79,7 +78,6 @@ namespace AssignmentApp.ViewModels
             List<Record> records = new List<Record>();
             Record record = new Record()
             {
-                Id = 1,
                 RecordName = "Record 1",
                 DateTime = DateTime.Today,
                 Version = "1.0.0.X",
@@ -91,7 +89,6 @@ namespace AssignmentApp.ViewModels
             };
             Record record2 = new Record()
             {
-                Id=2,
                 RecordName = "Record 2",
                 DateTime = DateTime.Today,
                 Version = "1.0.0.X",
@@ -105,7 +102,7 @@ namespace AssignmentApp.ViewModels
             records.Add(record2);
             var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
             readWriteJsonFile.WriteJson(fileName, records);
-            MessageBox_Show(null,$"Successfuly create file at location : {fileName}", "Create File", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            MessageBox_Show(null, $"Successfuly create file at location : {fileName}", "Create File", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
         }
 
         private void EditRecord(object isEditRow)
@@ -117,15 +114,20 @@ namespace AssignmentApp.ViewModels
 
         private void SaveRecord(object obj)
         {
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
-            foreach (var item in editedRecords)
+            //Checking if the SelectedItem of the ListBox is null or not. If null, then we are adding new rows. else updating the selected item.
+            if (SelectedItem == null)
             {
-                records.Add(item);
-            }            
+                foreach (var item in editedRecords)
+                {
+                    records.Add(item);
+                }
+                MessageBox_Show(null, $"Successfully added a new record");
+            }
+            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
             readWriteJsonFile.WriteJson(fileName, records);
             SelectedEditedRecords.Clear();
             CanUserAddRecord = false;
-            MessageBox_Show(null, $"File is successfully saved at location : {fileName}", "File Save", System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
+            MessageBox_Show(null, $"File is successfully saved at location : {fileName}", "File Save", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
         }
 
         #endregion
@@ -140,7 +142,7 @@ namespace AssignmentApp.ViewModels
             }
             set
             {
-                if(records !=value)
+                if (records != value)
                 {
                     records = value;
                     OnPropertyChanged("Records");
@@ -155,7 +157,7 @@ namespace AssignmentApp.ViewModels
             }
             set
             {
-                if(selectedRecord != value)
+                if (selectedRecord != value)
                 {
                     selectedRecord = value;
                     EditRecordCommand.RaiseCanExecuteChanged();
@@ -188,11 +190,6 @@ namespace AssignmentApp.ViewModels
             {
                 if (editedRecords != value)
                 {
-                    editedRecords = value;
-                    foreach (var item in editedRecords)
-                    {
-                        records.Add(item);
-                    }
                     editedRecords.Clear();
                     OnPropertyChanged("Records");
                     OnPropertyChanged("SelectedEditedRecords");
@@ -207,15 +204,15 @@ namespace AssignmentApp.ViewModels
             }
             set
             {
-                if(newFeature != value)
+                if (newFeature != value)
                 {
                     newFeature = value;
-                    if(selectedRecord != null && selectedRecord.Features == null)
+                    if (selectedRecord != null && selectedRecord.Features == null)
                     {
                         selectedRecord.Features = new ObservableCollection<string>();
                         selectedRecord.Features.Add(newFeature);
                     }
-                    else if(editedRecord.Features == null)
+                    else if (editedRecord.Features == null)
                     {
                         editedRecord.Features = new ObservableCollection<string>();
                         editedRecord.Features.Add(newFeature);
@@ -234,7 +231,7 @@ namespace AssignmentApp.ViewModels
             }
             set
             {
-                if(isEditable != value)
+                if (isEditable != value)
                 {
                     isEditable = value;
                     OnPropertyChanged("IsEditable");
@@ -249,7 +246,7 @@ namespace AssignmentApp.ViewModels
             }
             set
             {
-                if(canUserAddRecord != value)
+                if (canUserAddRecord != value)
                 {
                     canUserAddRecord = value;
                     OnPropertyChanged("CanUserAddRecord");
