@@ -115,7 +115,7 @@
             <StackPanel DockPanel.Dock="Left">
                 <Button Content="Create File" Command="{Binding CreateNewFileCommand}"/>
                 <Button Content="Open File" Command="{Binding OpenFileCommand}" Click="OpenExistingFileButton_Click"/>
-                <Button x:Name="NewRecord" Content="New Record" Command="{Binding NewRecordCommand}" Tag="NewRecord"/>
+                <Button x:Name="NewRecord" Content="New Record" Command="{Binding NewRecordCommand}" CommandParameter="{Binding}"/>
                 <Button Content="Save File" Command="{Binding SaveCommand}"/>
                 <Button x:Name="EditRecord" Content="Edit Record" ToolTip="Select a record to edit" 
                         Command="{Binding EditRecordCommand}"/>                

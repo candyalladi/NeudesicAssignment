@@ -16,6 +16,8 @@ namespace AssignmentApp.ViewModels
 {
     public class AssignmentAppViewModel : ViewModelBase
     {
+        #region Variables
+
         private Record selectedRecord;
         private Record editedRecord;
         private string newFeature;
@@ -24,6 +26,8 @@ namespace AssignmentApp.ViewModels
         private bool canUserAddRecord = false;
         private ObservableCollection<Record> records;
         private ObservableCollection<Record> editedRecords;
+
+        #endregion
 
         public AssignmentAppViewModel(IReadWriteJsonFile<Record> readWriteJsonFile)
         {
@@ -36,6 +40,16 @@ namespace AssignmentApp.ViewModels
             this.readWriteJsonFile = readWriteJsonFile;
         }
 
+        #region DelegateCommands
+        public DelegateCommand SaveCommand { get; }
+        public DelegateCommand EditRowCommand { get; }
+        public DelegateCommand CreateNewFileCommand { get; }
+        public DelegateCommand NewRecordCommand { get; }
+        public DelegateCommand EditRecordCommand { get; private set; }
+
+        #endregion
+
+        #region Methods
         private bool CanEditRecord(object obj)
         {
             return SelectedItem !=null;
@@ -96,23 +110,27 @@ namespace AssignmentApp.ViewModels
 
         private void EditRecord(object isEditRow)
         {
+            if (SelectedEditedRecords.Count > 0)
+                SelectedEditedRecords.Clear();
             SelectedEditedRecords.Add(selectedRecord);
         }
 
         private void SaveRecord(object obj)
         {
-            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";           
+            var fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\AssignmentApp.json";
+            foreach (var item in editedRecords)
+            {
+                records.Add(item);
+            }            
             readWriteJsonFile.WriteJson(fileName, records);
             SelectedEditedRecords.Clear();
+            CanUserAddRecord = false;
             MessageBox_Show(null, $"File is successfully saved at location : {fileName}", "File Save", System.Windows.MessageBoxButton.OK,System.Windows.MessageBoxImage.Information);
         }
 
-        public DelegateCommand SaveCommand { get; }
-        public DelegateCommand EditRowCommand { get; }
-        public DelegateCommand CreateNewFileCommand { get; }
+        #endregion
 
-        public DelegateCommand NewRecordCommand { get; }
-        public DelegateCommand EditRecordCommand { get; private set; }
+        #region Properties
 
         public ObservableCollection<Record> Records
         {
@@ -129,7 +147,6 @@ namespace AssignmentApp.ViewModels
                 }
             }
         }
-
         public Record SelectedItem
         {
             get
@@ -146,7 +163,6 @@ namespace AssignmentApp.ViewModels
                 }
             }
         }
-
         public Record EditedRecord
         {
             get
@@ -162,7 +178,6 @@ namespace AssignmentApp.ViewModels
                 }
             }
         }
-
         public ObservableCollection<Record> SelectedEditedRecords
         {
             get
@@ -195,18 +210,22 @@ namespace AssignmentApp.ViewModels
                 if(newFeature != value)
                 {
                     newFeature = value;
-                    if(selectedRecord.Features == null)
+                    if(selectedRecord != null && selectedRecord.Features == null)
                     {
                         selectedRecord.Features = new ObservableCollection<string>();
+                        selectedRecord.Features.Add(newFeature);
                     }
-                    selectedRecord.Features.Add(newFeature);
+                    else if(editedRecord.Features == null)
+                    {
+                        editedRecord.Features = new ObservableCollection<string>();
+                        editedRecord.Features.Add(newFeature);
+                    }
                     this.newFeature = string.Empty;
                     OnPropertyChanged("Features");
                     OnPropertyChanged("Records");
                 }
             }
         }
-
         public bool IsEditable
         {
             get
@@ -222,7 +241,6 @@ namespace AssignmentApp.ViewModels
                 }
             }
         }
-
         public bool CanUserAddRecord
         {
             get
@@ -238,5 +256,8 @@ namespace AssignmentApp.ViewModels
                 }
             }
         }
+
+        #endregion
+
     }
 }
